@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8 />
+    <title>Lab 08 Starter</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: whitesmoke;
+            font-family: Lato, sans-serif;
+            color: #0D0000;
+        }
+        header {
+            padding: 6px 10%;
+        }
+        h1 {
+            display: inline-block;
+            margin-right: 20px;
+            color: #001323;
+        }
+        h2 {
+            display: inline-block;
+            color: #001323;
+        }
+        #map {
+            width: 80%;
+            height: 540px;
+            margin: 10px auto;
+        }
+        footer {
+            padding: 6px 10%;
+            width: 80%;
+        }
+        p {
+            font-size: 1em;
+            color: #001323;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>United States</h1><br>
+        <h2>Cities around the World and Their Populations</h2>
+    </header>
+
+    <div id='map'></div>
+
+    <footer>
+        <p>Monica38.443932, -45.755052 Pagan</p>
+        <p>I created a map for the world populations using a js provided by the website geojson.xyz. With this I was able to set the variable up equal to the geoJSON popplace calling it the variable names. This allowed me to create the circleMarkers that I needed. I set the colors in here to blue and green and created a stroke with the number zero, allowing for it to be strokeless. I then set the other color outside to blue so that way when there was a stroke on the mouseout, it could be distinct. On the radius I set it up to the function getRadius which I have created using people, divided and math.pi. For divided I set it up to the number 1000 because of the size of the circles without this number. These circles became too large to see on the map. When I added in this number, the circles became easier to see and to click on. I filtered through name in order to return the features and then moved onto oneachFeature. In doing this I was able to set up a contrasting color of red along with a stroke variable which I set to blue up above in order for there to be a big contrast in the circle the user was able to select. On mouseout I was able to set the circle back to a strokless state and back to green. This allowed for the circle to return ba38.443932, -45.755052ck to normal. I was also able to create a name variable for the names that were needed for the popups throughout the maps popups as well as the number of their max population.</p>
+    </footer>
+    
+
+<script src=rest_areas.js></script>
+<script src=truck_network.js></script>
+<script src=truck_volumes.js></script>
+    
+    
+    
+    <script>
+
+
+      var map = L.map('map', {
+          center: [0.042602, -22.376146],
+          zoom: 2,
+      });
+      
+      var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+          subdomains: 'abcd',
+          maxZoom: 19
+      });  
+      
+      tiles.addTo(map);
+      
+
+           
+
+         
+    //step 5
+    onEachFeature : function(feature,layer) {
+    layer.on('mouseover', function() {
+    layer.setStyle({
+        fillColor: 'red',
+        stroke: 11
+    });
+});
+layer.on('mouseout', function() {
+    layer.setStyle({
+        fillColor: 'green',
+        stroke: 0
+    });
+});
+
+ 
+          
+          var name = feature.properties.NAME
+          var address = feature.properties.ADDRESS
+          //var rt = feature.properties.RT
+  
+                                                
+          
+          var popup = ("<b>"+"Name: "+ "</b>" + "<br>"+ name +"</b><br>" + "<b>" + "Address: " + "</b>" + "<br>" +address)
+                       layer.bindPopup(popup)
+          }
+          
+          
+      }).addTo(map);
+        
+        
+        
+          
+    </script>
+    
+</body>
+
+</html>
+
+
+<!--I created a map for the world populations using a js provided by the website geojson.xyz. With this I was able to set the variable up equal to the geoJSON popplace calling it the variable names. This allowed me to create the circleMarkers that I needed. I set the colors in here to blue and green and created a stroke with the number zero, allowing for it to be strokeless. I then set the other color outside to blue so that way when there was a stroke on the mouseout, it could be distinct. On the radius I set it up to the function getRadius which I have created using people, divided and math.pi. For divided I set it up to the number 1000 because of the size of the circles without this number. These circles became too large to see on the map. When I added in this number, the circles became easier to see and to click on. I filtered through name in order to return the features and then moved onto oneachFeature. In doing this I was able to set up a contrasting color of red along with a stroke variable which I set to blue up above in order for there to be a big contrast in the circle the user was able to select. On mouseout I was able to set the circle back to a strokless state and back to green. This allowed for the circle to return back to normal. I was also able to create a name variable for the names that were needed for the popups throughout the maps popups as well as the number of their max population.-->

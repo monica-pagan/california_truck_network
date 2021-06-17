@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8 />
+    <title>Lab 08 Starter</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: whitesmoke;
+            font-family: Lato, sans-serif;
+            color: #0D0000;
+        }
+        header {
+            padding: 6px 10%;
+        }
+        h1 {
+            display: inline-block;
+            margin-right: 20px;
+            color: #001323;
+        }
+        h2 {
+            display: inline-block;
+            color: #001323;
+        }
+        #map {
+            width: 80%;
+            height: 540px;
+            margin: 10px auto;
+        }
+        footer {
+            padding: 6px 10%;
+            width: 80%;
+        }
+        p {
+            font-size: 1em;
+            color: #001323;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>United States</h1><br>
+        <h2>Cities around the World and Their Populations</h2>
+    </header>
+
+    <div id='map'></div>
+
+    <footer>
+        <p>Monica38.443932, -45.755052 Pagan</p>
+        <p>I created a map with Truck Routes that shows the Truck Routes of California as well as the Rest Stops that are located in the state and the Truck Volume. Truck Volume on this map is described as Truck Annual Average Daily Traffic 2018 (AADT) is shown for selected locations on the California State Highway System. The truck traffic volumes data are summarized annually and published by Caltrans, Traffic Operations Division. Annual average daily truck traffic is the total truck traffic volume divided by 365 days. Truck counting is done throughout the state in a program of continuous truck count sampling. The sampling includes a partial day, 24-hour, 7-day and continuous vehicle classification counts. The partial day and 24-hour counts are usually made on high volume, urban highways. The 7-day counts are made on low volume, rural highways. The counts are usually taken only once in the year. About one-sixth of the locations are counted annually. The resulting counts are adjusted to an estimate of annual average daily truck traffic by compensating for seasonal influence, weekly variation, and other variables that may be present. Annual average daily truck traffic is necessary for presenting a statewide picture of truck flow, evaluating truck trends, planning and designing highways and for other purposes. Truck traffic is classified by number of axles. The two-axle class includes 11/2-ton trucks with dual rear tires and excludes pickups and vans with only four tires. Total vehicle AADT for the same year is taken from the Traffic Volumes on California State Highways booklet also published by the California Department of Transportation.Reference Link: http://www.dot.ca.gov/hq/traffops/saferesr/trafdata/index.htm.</p>
+    </footer>
+    
+
+
+<script src=truck_network.js></script>
+<script src=rest_areas.js></script>
+<script src=truck_volumes.js></script>
+    
+    
+    
+    <script>
+
+
+      var map = L.map('map', {
+          center: [0.042602, -22.376146],
+          zoom: 2,
+      });
+      
+      var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+          subdomains: 'abcd',
+          maxZoom: 19
+      });  
+      
+      tiles.addTo(map);
+//      
+          
+        
+
+      var TruckNetwork = L.geoJson(truck_network, {
+          pointToLayer: function(feature,coordinates) {
+              console.log(feature.properties.RT)
+              return L.polyline(coordinates, {
+                 color: 'blue',
+                 weight: 3//step4
+              });   
+          },
+              
+    onEachFeature : function(feature,layer) {
+    layer.on('mouseover', function() {
+    layer.setStyle({
+        fillColor: 'yellow',
+        stroke: 11
+    });
+});
+    layer.on('mouseout', function() {
+    layer.setStyle({
+        fillColor: 'green',
+        stroke: 11
+    });
+});
+
+         
+          var name = feature.properties.RT
+          var start = feature.properties.BEGIN_LOCA
+          var stop = feature.properties.END_LOCATI    
+          var popup = ("<b>"+ "Truck Route Name: "+ "</b>" + "<br>"+ "RT " + name + "<br>" + "<b>" + "Starting Location: " + "</b>" + "<br>" + start + "<br>" + "<b>" + "Ending Location: " + "</b>" + "<br>" + stop)
+          
+          //var popup2 = ("<b>" + "Name: " + "</b>" + name2)
+             layer.bindPopup(popup)
+          }   
+      }).addTo(map);
+        
+        
+        
+    
+      var RestAreas = L.geoJson(rest_areas, {
+          pointToLayer: function(feature,coordinates) {
+              console.log(feature.properties.RT)
+              return L.circleMarker(coordinates, {
+                 color: 'yellow',
+                 weight: 1//step4
+              });   
+          },
+    onEachFeature : function(feature,layer) {
+    layer.on('mouseover', function() {
+    layer.setStyle({
+        fillColor: 'green',
+        stroke: 11
+    });
+});
+    layer.on('mouseout', function() {
+    layer.setStyle({
+        fillColor: 'yellow',
+        stroke: 11
+    });
+});
+
+
+          var name = feature.properties.NAME
+          var address = feature.properties.ADDRESS 
+          var popup = ("<b>"+ "Rest Stop Name: "+ "</b>" + "<br>"+ name + "<br>" + "<b>" + "Address: " + "</b>" + "<br>" +  address)
+          
+          //var popup2 = ("<b>" + "Name: " + "</b>" + name2)
+             layer.bindPopup(popup)
+          }
+          
+      }).addTo(map);
+        
+         
+        
+        
+        
+        
+      var TruckVolumes = L.geoJson(truck_volumes, {
+          pointToLayer: function(feature,coordinates) {
+              console.log(feature.properties.DESCRIPTN)
+              return L.circleMarker(coordinates, {
+                 color: 'red',
+                 weight: 0.5//step4
+              });   
+          },
+          
+       
+    onEachFeature : function(feature,layer) {
+    layer.on('mouseover', function() {
+    layer.setStyle({
+        fillColor: 'yellow',
+        stroke: 11
+    });
+});
+    layer.on('mouseout', function() {
+    layer.setStyle({
+        fillColor: 'red',
+        stroke: 11
+    });
+});
+
+         
+          
+          var name = feature.properties.DESCRIPTN
+          var popup = ("<b>"+ "Truck Volume Name: "+ "</b>" + "<br>"+ name)
+          
+          //var popup2 = ("<b>" + "Name: " + "</b>" + name2)
+             layer.bindPopup(popup)
+          }
+          
+          
+
+          
+      }).addTo(map);   
+        
+        
+            var sourceLayers = {        
+             "Truck Network": TruckNetwork, 
+             "Truck Volumes": TruckVolumes,
+             "Rest Areas": RestAreas
+         }
+                  
+        var sourceLayers = {    
+            "<b style='color:#1f78b4'>TruckNetwork</b>": TruckNetwork,    
+            "<b style='color:#950714'>TruckVolumes</b>": TruckVolumes, 
+            "<b style='color:#f0dc82'>Rest Areas</b>": RestAreas}
+         
+         L.control.layers(null, sourceLayers, {collapsed:false}).addTo(map);
+        
+        
+          
+   </script>
+    
+</body>
+
+</html>
+
+
+
